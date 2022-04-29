@@ -1,0 +1,44 @@
+name: README.md
+
+on:
+  push:
+  schedule:
+  - cron: '42 * * * *'
+  workflow_dispatch:
+
+jobs:
+  cel-price:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - id: cel-price
+      uses: ./.github/actions/cel-price
+    outputs:
+      chart: ${{ steps.cel-price.outputs.chart }}
+
+  update:
+    needs:
+    - cel-price
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        cat <<'EOF' | tee README.md
+
+        ## CEL Price
+
+        ```
+        ${{ needs.cel-price.outputs.chart }}
+        ```
+
+        EOF
+    - id: diff
+      run: git diff --exit-code
+      continue-on-error: true
+    - if: ${{ steps.diff.outcome == 'failure' }}
+      run: |
+        git add .
+        git config --local user.name "GitHub Action"
+        git config --local user.email action@github.com
+        git commit --message 'Update'
+        git push
