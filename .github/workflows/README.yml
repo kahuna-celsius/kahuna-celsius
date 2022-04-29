@@ -24,13 +24,11 @@ jobs:
     - uses: actions/checkout@v2
     - run: |
         cat <<'EOF' | tee README.md
-
         ## CEL Price
-
+        
         ```
         ${{ needs.cel-price.outputs.chart }}
         ```
-
         EOF
     - id: diff
       run: git diff --exit-code
