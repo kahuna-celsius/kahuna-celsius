@@ -35,7 +35,8 @@ jobs:
     - id: diff
       run: git diff --exit-code
       continue-on-error: true
-    - if: ${{ steps.diff.outcome == 'failure' }}
+    - id: update
+      # if: ${{ steps.diff.outcome == 'failure' }}
       run: |
         git add .
         git config --local user.name "GitHub Action"
