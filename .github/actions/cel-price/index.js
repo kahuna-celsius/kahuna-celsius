@@ -28,7 +28,7 @@ ${chart}
 }
 
 if (require.main === module) {
-  main(process.env.ALPHA_VANTAGE_API_KEY).then(function (chart) {
+  main(process.env.API_KEY).then(function (chart) {
     console.log(chart)
     core.setOutput('chart', chart)
     process.exit(0)
